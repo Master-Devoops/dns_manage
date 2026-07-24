@@ -1,0 +1,378 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --primary: #06b6d4;
+    --primary-foreground: #09090b;
+    --secondary: #18181b;
+    --secondary-foreground: #a1a1aa;
+    --accent: #10b981;
+    --accent-foreground: #09090b;
+    --muted: #27272a;
+    --muted-foreground: #71717a;
+    --card: #111113;
+    --card-foreground: #fafafa;
+    --border: #27272a;
+    --input: #18181b;
+    --ring: #06b6d4;
+    --radius: 8px;
+    --font-sans: var(--font-geist-sans), 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: var(--font-geist-mono), 'Geist Mono', ui-monospace, monospace;
+
+    --status-active: #10b981;
+    --status-active-bg: #10b98115;
+    --status-degraded: #f59e0b;
+    --status-degraded-bg: #f59e0b15;
+    --status-down: #ef4444;
+    --status-down-bg: #ef444415;
+    --status-unknown: #71717a;
+    --status-unknown-bg: #71717a15;
+
+    --ssl-valid: #10b981;
+    --ssl-expiring: #f59e0b;
+    --ssl-critical: #ef4444;
+    --ssl-expired: #71717a;
+
+    --record-a: #06b6d4;
+    --record-cname: #8b5cf6;
+    --record-mx: #f59e0b;
+    --record-txt: #10b981;
+    --record-ns: #ec4899;
+    --record-srv: #f97316;
+}
+
+@layer base {
+    * {
+        box-sizing: border-box;
+        border-color: var(--border);
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        margin: 0;
+    }
+
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--background);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--muted);
+        border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--muted-foreground);
+    }
+}
+
+@layer utilities {
+    .font-mono {
+        font-family: var(--font-mono);
+    }
+
+    .tabular-nums {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .text-hero-xl {
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+    }
+
+    .gradient-primary {
+        background: linear-gradient(135deg, var(--primary), #0891b2);
+    }
+
+    .card-elevated {
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+    }
+
+    .card-hover {
+        transition: border-color 200ms ease, background-color 200ms ease;
+    }
+
+    .card-hover:hover {
+        border-color: #3f3f46;
+        background-color: #18181b;
+    }
+
+    .glow-primary {
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+    }
+
+    .glow-accent {
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+    }
+
+    .status-dot-active {
+        background-color: var(--status-active);
+        box-shadow: 0 0 6px var(--status-active);
+    }
+
+    .status-dot-degraded {
+        background-color: var(--status-degraded);
+        box-shadow: 0 0 6px var(--status-degraded);
+    }
+
+    .status-dot-down {
+        background-color: var(--status-down);
+        box-shadow: 0 0 6px var(--status-down);
+    }
+
+    .status-dot-unknown {
+        background-color: var(--status-unknown);
+    }
+
+    .sidebar-item-active {
+        background-color: rgba(6, 182, 212, 0.1);
+        color: var(--primary);
+        border-left: 2px solid var(--primary);
+    }
+
+    .sidebar-item-inactive {
+        color: var(--muted-foreground);
+        border-left: 2px solid transparent;
+    }
+
+    .sidebar-item-inactive:hover {
+        background-color: var(--muted);
+        color: var(--foreground);
+    }
+
+    .input-base {
+        background-color: var(--input);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        padding: 8px 12px;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+        outline: none;
+        width: 100%;
+    }
+
+    .input-base:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    .input-base::placeholder {
+        color: var(--muted-foreground);
+    }
+
+    .input-error {
+        border-color: var(--status-down);
+    }
+
+    .input-error:focus {
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 600;
+        padding: 8px 16px;
+        transition: all 150ms ease;
+        cursor: pointer;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-primary:hover {
+        background-color: #0891b2;
+        transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+        transform: scale(0.97) translateY(0);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .btn-secondary {
+        background-color: var(--muted);
+        color: var(--foreground);
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 16px;
+        transition: all 150ms ease;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #3f3f46;
+        border-color: #52525b;
+    }
+
+    .btn-secondary:active {
+        transform: scale(0.97);
+    }
+
+    .btn-danger {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: var(--radius);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 16px;
+        transition: all 150ms ease;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-danger:hover {
+        background-color: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .btn-ghost {
+        background-color: transparent;
+        color: var(--muted-foreground);
+        border-radius: calc(var(--radius) - 2px);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 6px 10px;
+        transition: all 150ms ease;
+        cursor: pointer;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-ghost:hover {
+        background-color: var(--muted);
+        color: var(--foreground);
+    }
+
+    .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+    }
+
+    .sync-pulse {
+        animation: syncPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes syncPulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+    }
+
+    .fade-in {
+        animation: fadeIn 200ms ease forwards;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(4px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide-up {
+        animation: slideUp 200ms ease forwards;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-enter {
+        animation: modalEnter 150ms ease forwards;
+    }
+
+    @keyframes modalEnter {
+        from {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .row-delete {
+        animation: rowDelete 250ms ease forwards;
+    }
+
+    @keyframes rowDelete {
+        to {
+            opacity: 0;
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+}
