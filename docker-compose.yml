@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: devoops-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-devoops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-devoops_password}
+      POSTGRES_DB: ${POSTGRES_DB:-devoops_dns}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-devoops} -d ${POSTGRES_DB:-devoops_dns}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: devoops-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      # Always derived from the root .env values above, so it can never
+      # mismatch what the postgres service was actually created with.
+      # This intentionally overrides any DATABASE_URL set in backend/.env.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-devoops}:${POSTGRES_PASSWORD:-devoops_password}@postgres:5432/${POSTGRES_DB:-devoops_dns}?schema=public
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    # First run: uses `db push` to create schema (no migration history yet).
+    # Once you're ready for real migrations, run `npx prisma migrate dev --name init`
+    # locally, commit the generated prisma/migrations folder, and switch this
+    # to `npx prisma migrate deploy` instead.
+    command: sh -c "npx prisma db push --skip-generate && npx prisma db seed && node dist/main"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: devoops-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: devoops-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  postgres_data:

@@ -1,0 +1,108 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  DEVELOPER
+  VIEWER
+}
+
+enum RecordType {
+  A
+  AAAA
+  CNAME
+  TXT
+  MX
+  NS
+  SRV
+}
+
+enum RecordStatus {
+  ACTIVE
+  PENDING
+  ERROR
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  name          String
+  role          Role           @default(VIEWER)
+  isActive      Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshTokens RefreshToken[]
+  activityLogs  ActivityLog[]
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model DnsRecord {
+  id           String       @id @default(uuid())
+  domain       String       @default("devoops.in")
+  subdomain    String
+  type         RecordType
+  data         String // IP address, CNAME target, TXT value, etc.
+  ttl          Int          @default(3600)
+  priority     Int? // for MX/SRV
+  comment      String?
+  status       RecordStatus @default(ACTIVE)
+  godaddySynced Boolean     @default(false)
+  createdById  String?
+  updatedById  String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([subdomain, type, domain])
+  @@map("dns_records")
+}
+
+model ActivityLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String // e.g. "CREATED", "UPDATED", "DELETED", "SYNCED", "LOGIN"
+  entity    String // e.g. "DNS_RECORD", "USER"
+  entityId  String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("activity_logs")
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  role      Role?
+  action    String
+  oldData   Json?
+  newData   Json?
+  requestIp String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
