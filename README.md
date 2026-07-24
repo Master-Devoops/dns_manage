@@ -54,7 +54,7 @@ Health check: `GET http://localhost:4000/health`
 ```bash
 curl -X POST http://localhost:4000/api/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@devoops.in","password":"ChangeMe123!"}'
+  -d '{"email":"devoops.in@gmail.com","password":"Admin@321"}'
 ```
 
 Response includes an `accessToken` (use as `Authorization: Bearer <token>` on subsequent
@@ -65,7 +65,7 @@ requests) and sets an httpOnly `refresh_token` cookie.
 curl -X POST http://localhost:4000/api/change-password \
   -H "Authorization: Bearer <accessToken>" \
   -H "Content-Type: application/json" \
-  -d '{"currentPassword":"ChangeMe123!","newPassword":"YourNewStrongPassword!"}'
+  -d '{"currentPassword":"Admin@321","newPassword":"YourNewStrongPassword!"}'
 ```
 
 ## 5. Create your first subdomain

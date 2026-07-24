@@ -26,11 +26,11 @@ export default function LoginPage() {
     try {
       const response = await api.post("/login", { email, password });
       localStorage.setItem("accessToken", response.data.accessToken);
-      
+
       const profileRes = await api.get("/profile", {
         headers: { Authorization: `Bearer ${response.data.accessToken}` }
       });
-      
+
       setUser(profileRes.data);
       router.push("/dashboard");
     } catch (err: any) {
@@ -71,7 +71,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@devoops.in"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
