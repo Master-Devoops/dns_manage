@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "backend_code/**"
+      - "backend/**"
       - ".github/workflows/stage-backend-deploy.yml"
 
 env:
@@ -52,7 +52,7 @@ jobs:
         run: |
           docker build \
             -t "${{ env.IMAGE_NAME }}" \
-            -f backend_code/Dockerfile .
+            -f backend/Dockerfile .
       - name: Tag Images
         run: |
           docker tag \
