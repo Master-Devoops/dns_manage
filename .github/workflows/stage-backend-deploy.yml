@@ -18,7 +18,7 @@ env:
   CONTAINER_PORT: 4000
   NAMESPACE: dns-manage
   DEPLOYMENT_NAME: backend-deployment
-  DB_SUCCESS_MESSAGE: "Connection to Client DB has been established successfully."
+  DB_SUCCESS_MESSAGE: "MySQL connected"
 
 jobs:
   push:
