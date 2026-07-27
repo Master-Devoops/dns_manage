@@ -49,10 +49,11 @@ jobs:
       #####################################################################
 
       - name: Build Final Backend Image
+        working-directory: ./backend
         run: |
           docker build \
             -t "${{ env.IMAGE_NAME }}" \
-            -f backend/Dockerfile .
+            -f Dockerfile .
       - name: Tag Images
         run: |
           docker tag \

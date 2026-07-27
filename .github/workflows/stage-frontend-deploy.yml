@@ -53,6 +53,7 @@ jobs:
       #####################################################################
 
       - name: Build Final frontend Image
+        working-directory: ./frontend
         run: |
           docker build \
             -t "${{ env.IMAGE_NAME }}" \
