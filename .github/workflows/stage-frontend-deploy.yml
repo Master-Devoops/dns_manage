@@ -57,7 +57,7 @@ jobs:
         run: |
           docker build \
             -t "${{ env.IMAGE_NAME }}" \
-            -f frontend/Dockerfile .
+            -f Dockerfile .
 
       - name: Tag Images
         run: |
