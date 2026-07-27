@@ -21,6 +21,27 @@ async function main() {
   app.use(cors({ origin: true, credentials: true }));
   app.use(express.json({ limit: "1mb" }));
 
+  // Request logging middleware
+  app.use((req, res, next) => {
+    const start = Date.now();
+    const timestamp = new Date().toISOString();
+    res.on("finish", () => {
+      const duration = Date.now() - start;
+      console.log(
+        `[${timestamp}] ${req.method} ${req.originalUrl} - ${res.statusCode} (${duration}ms) - IP: ${req.ip}`
+      );
+    });
+    next();
+  });
+
+  app.get("/", (_req, res) => {
+    res.json({
+      status: "ok",
+      service: "dns-manage",
+      message: "DNS Manage API is running",
+    });
+  });
+
   app.get("/api/health", (_req, res) => {
     res.json({
       status: "ok",
